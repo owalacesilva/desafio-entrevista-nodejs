@@ -1,0 +1,42 @@
+
+version: '3.7'
+
+services:
+  app: &app
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NODE_VERSION: '16.14.2'
+    env_file: devcontainer.env
+    image: drconsulta:1.0.0
+    tmpfs:
+      - /tmp
+    volumes:
+      - ..:/app:cached
+    depends_on:
+      - phpmyadmin
+    stdin_open: true
+    tty: true
+
+  runner:
+    <<: *app
+    command: /bin/bash
+    ports:
+      - '3000:3000'
+
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    env_file: devcontainer.env
+    ports:
+      - 8080:80
+    links: 
+      - mysqldb
+    depends_on: 
+      - mysqldb
+
+  mysqldb:
+    image: mariadb
+    restart: always
+    env_file: devcontainer.env

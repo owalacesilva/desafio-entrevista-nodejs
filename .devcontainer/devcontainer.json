@@ -1,0 +1,52 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.202.5/containers/ruby-rails-postgres
+// Update the VARIANT arg in docker-compose.yml to pick a Ruby version
+{
+	"name": "DrConsulta",
+	"dockerComposeFile": "docker-compose.yml",
+	"service": "runner",
+	"workspaceFolder": "/app",
+
+	// Set *default* container specific settings.json values on container create.
+	"settings": {
+    "editor.tabSize": 2,
+    
+    "[javascript]": {
+      "editor.tabSize": 2
+    },
+    
+    "[typescript]": {
+      "editor.tabSize": 2
+    },
+    
+    "[json]": {
+      "editor.tabSize": 2
+    },
+
+    // This one forces the tab to be **space**
+    "editor.insertSpaces": true,  
+
+    // When opening a file, `editor.tabSize` and `editor.insertSpaces`
+    // will be detected based on the file contents. Set to false to keep
+    // the values you've explicitly set, above.
+    "editor.detectIndentation": false,
+    "editor.cursorBlinking": "smooth",
+    "editor.cursorSmoothCaretAnimation": "on"
+	},
+
+	// Add the IDs of extensions you want installed when the container is created.
+	"extensions": [
+    "eamodio.gitlens",
+    "donjayamanne.githistory",
+    "ms-azuretools.vscode-docker"
+	],
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	"forwardPorts": [3000, 8080],
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	// "postCreateCommand": "bundle install && rake db:setup",
+
+	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+	// "remoteUser": "vscode"
+}
