@@ -5,6 +5,7 @@ import { DatabaseModule } from './database/database.module';
 import { CompanyModule } from './company/company.module';
 import { VehicleModule } from './vehicle/vehicle.module';
 import { UserModule } from './user/user.module';
+import { ParkModule } from './park/park.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { UserModule } from './user/user.module';
     UserModule,
     CompanyModule,
     VehicleModule,
+    ParkModule,
   ],
   controllers: [AppController],
   providers: [AppService],
