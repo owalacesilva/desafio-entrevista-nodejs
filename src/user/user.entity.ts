@@ -1,8 +1,11 @@
+import { Company } from 'src/company/company.entity';
 import {
   BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -28,4 +31,8 @@ export class User extends BaseEntity {
 
   @Column()
   password: string;
+
+  @OneToOne(() => Company)
+  @JoinColumn()
+  company: Company;
 }
