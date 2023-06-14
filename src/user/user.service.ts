@@ -10,11 +10,11 @@ export class UserService {
     private userRepository: Repository<User>
   ) {}
 
-  async findAll(): Promise<User[]> {
+  async getAll(): Promise<User[]> {
     return this.userRepository.find();
   }
 
-  async findById(id: number): Promise<User> {
+  async getById(id: number): Promise<User> {
     const user = await this.userRepository.findOneBy({ id });
 
     if (!user) {
@@ -24,12 +24,8 @@ export class UserService {
     return user;
   }
 
-  async findByEmail(email: string): Promise<User> {
-    const user = await this.userRepository.findOne({
-      where: {
-        email: email
-      }
-    });
+  async getByEmail(email: string): Promise<User> {
+    const user = await this.userRepository.findOneBy({ email });
 
     if (!user) {
       throw new HttpException('User cannot found', HttpStatus.NOT_FOUND);
@@ -42,19 +38,9 @@ export class UserService {
     return await this.userRepository.save(postData);
   }
 
-  async update(id: number, postData: Object) {
+  async update(user: User, id: number, postData: Object) {
     await this.userRepository.update(id, postData);
-    const user = await this.userRepository.findOne({
-      where: {
-        id: id
-      }
-    });
-
-    if (!user) {
-      throw new HttpException('User cannot found', HttpStatus.NOT_FOUND);
-    }
-
-    return user;
+    return await this.getById(id);
   }
 
   async delete(id: number) {

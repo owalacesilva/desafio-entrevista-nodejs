@@ -1,41 +1,43 @@
-import { Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Request, Res, UseFilters, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
+import { JwtAuthGuard } from 'src/auth/strategies/jwt-auth.guard';
+import { DuplicateEntryFilter } from 'src/exceptions/duplicate.exception.filter';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('users')
 export class UserController {
+
   constructor(private readonly userService: UserService) { }
 
-  @HttpCode(200)
   @Get()
+  @UseGuards(JwtAuthGuard)
   index() {
-    return this.userService.findAll();
+    return this.userService.getAll();
   }
 
-  @HttpCode(200)
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   show(@Param('id') id: string) {
-    return this.userService.findById(+id);
+    return this.userService.getById(+id);
   }
 
   @Post()
-  create() {
-    return this.userService.create({
-      full_name: 'Walace Silva',
-      email: 'walace@email.com',
-      password: '123456',
-    });
+  @UseFilters(DuplicateEntryFilter)
+  @UseFilters(new DuplicateEntryFilter())
+  create(@Body() createUserDto: CreateUserDto) {
+    return this.userService.create(createUserDto);
   }
 
   @Put(':id')
-  update(@Param('id') id: string) {
-    return this.userService.update(+id, {
-      full_name: 'Walace Silva',
-      email: 'walace@email.com',
-      password: '123456',
-    });
+  @UseGuards(JwtAuthGuard)
+  @UseFilters(new DuplicateEntryFilter())
+  update(@Request() request, @Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    return this.userService.update(request.user, +id, updateUserDto);
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   delete(@Param('id') id: string, @Res() res) {
     this.userService.delete(+id);
 
