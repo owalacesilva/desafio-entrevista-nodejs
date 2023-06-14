@@ -1,44 +1,41 @@
-import { Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res, UseFilters, UseGuards } from '@nestjs/common';
 import { VehicleService } from './vehicle.service';
+import { JwtAuthGuard } from 'src/auth/strategies/jwt-auth.guard';
+import { DuplicateEntryFilter } from 'src/exceptions/duplicate.exception.filter';
+import { CreateVehicleDto } from './dto/create-vehicle.dto';
+import { UpdateVehicleDto } from './dto/update-vehicle.dto';
 
 @Controller('vehicles')
 export class VehicleController {
   constructor(private readonly vehicleService: VehicleService) { }
 
-  @HttpCode(200)
+  @UseGuards(JwtAuthGuard)
   @Get()
   index() {
-    return this.vehicleService.findAll();
+    return this.vehicleService.getAll();
   }
 
-  @HttpCode(200)
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   show(@Param('id') id: string) {
-    return this.vehicleService.findById(+id);
+    return this.vehicleService.getById(+id);
   }
 
   @Post()
-  create() {
-    return this.vehicleService.create({
-      brand: 'Chevrolet',
-      model: 'Camaro',
-      color: 'Gray',
-      registry: 'KDI2023',
-      kind_of: 'automobile',
-    });
+  @UseGuards(JwtAuthGuard)
+  @UseFilters(new DuplicateEntryFilter())
+  create(@Body() createVehicleDto: CreateVehicleDto) {
+    return this.vehicleService.create(createVehicleDto);
   }
 
   @Put(':id')
-  update(@Param('id') id: string) {
-    return this.vehicleService.update(+id, {
-      brand: 'Chevrolet',
-      model: 'Plus',
-      color: 'Gray',
-      registry: 'KDI2023',
-      kind_of: 'automobile',
-    });
+  @UseGuards(JwtAuthGuard)
+  @UseFilters(new DuplicateEntryFilter())
+  update(@Param('id') id: string, @Body() updateVehicleDto: UpdateVehicleDto) {
+    return this.vehicleService.update(+id, updateVehicleDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   delete(@Param('id') id: string, @Res() res) {
     this.vehicleService.delete(+id);

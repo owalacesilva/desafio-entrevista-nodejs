@@ -10,16 +10,12 @@ export class VehicleService {
     private vehicleRepository: Repository<Vehicle>
   ) {}
 
-  async findAll(): Promise<Vehicle[]> {
+  async getAll(): Promise<Vehicle[]> {
     return this.vehicleRepository.find();
   }
 
-  async findById(id: number): Promise<Vehicle> {
-    const vehicle = await this.vehicleRepository.findOne({
-      where: {
-        id: id
-      }
-    });
+  async getById(id: number): Promise<Vehicle> {
+    const vehicle = await this.vehicleRepository.findOneBy({ id });
 
     if (!vehicle) {
       throw new HttpException('Vehicle cannot found', HttpStatus.NOT_FOUND);
@@ -34,17 +30,7 @@ export class VehicleService {
 
   async update(id: number, postData: Object) {
     await this.vehicleRepository.update(id, postData);
-    const vehicle = await this.vehicleRepository.findOne({
-      where: {
-        id: id
-      }
-    });
-
-    if (!vehicle) {
-      throw new HttpException('Vehicle cannot found', HttpStatus.NOT_FOUND);
-    }
-
-    return vehicle;
+    return await this.getById(id);
   }
 
   async delete(id: number) {
