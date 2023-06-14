@@ -1,8 +1,9 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Request, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Request, Res, UseFilters, UseGuards } from '@nestjs/common';
 import { CompanyService } from './company.service';
 import { JwtAuthGuard } from 'src/auth/strategies/jwt-auth.guard';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
+import { DuplicateEntryFilter } from 'src/exceptions/duplicate.exception.filter';
 
 @Controller('companies')
 export class CompanyController {
@@ -21,14 +22,16 @@ export class CompanyController {
     return this.companyService.findById(request.user, +id);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Post()
+  @UseGuards(JwtAuthGuard)
+  @UseFilters(new DuplicateEntryFilter())
   create(@Request() request, @Body() createCompanyDto: CreateCompanyDto) {
     return this.companyService.create(request.user, createCompanyDto);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Put(':id')
+  @UseGuards(JwtAuthGuard)
+  @UseFilters(new DuplicateEntryFilter())
   update(@Request() request, @Param('id') id: string, @Body() updateCompanyDto: UpdateCompanyDto) {
     return this.companyService.update(request.user, +id, updateCompanyDto);
   }

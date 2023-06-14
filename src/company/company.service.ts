@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, Inject } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Company } from './company.entity';
 import { User } from 'src/user/user.entity';
@@ -35,14 +35,13 @@ export class CompanyService {
     });
 
     if (!company) {
-      throw new HttpException('Company cannot found', HttpStatus.NOT_FOUND);
+      throw new NotFoundException('Company cannot found');
     }
 
     return company;
   }
 
   async create(user: User, postData: Object) {
-    console.log(user)
     return await this.companyRepository.save({
       user: {
         id: user.id
