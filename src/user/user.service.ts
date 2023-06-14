@@ -28,6 +28,20 @@ export class UserService {
     return user;
   }
 
+  async findByEmail(email: string): Promise<User> {
+    const user = await this.userRepository.findOne({
+      where: {
+        email: email
+      }
+    });
+
+    if (!user) {
+      throw new HttpException('User cannot found', HttpStatus.NOT_FOUND);
+    }
+
+    return user;
+  }
+
   async create(postData: Object) {
     return await this.userRepository.save(postData);
   }
