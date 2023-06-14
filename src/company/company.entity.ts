@@ -40,16 +40,24 @@ export class Company extends BaseEntity {
   })
   user: User;
 
-  @Column()
+  @Column({
+    length: 255
+  })
   name: string;
 
-  @Column()
+  @Column({
+    length: 30
+  })
   company_identity: string;
 
-  @Column()
+  @Column({
+    length: 255
+  })
   address: string;
 
-  @Column()
+  @Column({
+    length: 11
+  })
   phone_number: string;
 
   @Column({

@@ -26,16 +26,24 @@ export class Vehicle extends BaseEntity {
   @UpdateDateColumn()
   updated_at: Date;
 
-  @Column()
+  @Column({
+    length: 45
+  })
   brand: string;
 
-  @Column()
+  @Column({
+    length: 45
+  })
   model: string;
 
-  @Column()
+  @Column({
+    length: 20
+  })
   color: string;
 
-  @Column()
+  @Column({
+    length: 9
+  })
   registry: string;
 
   @Column()

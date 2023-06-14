@@ -27,7 +27,9 @@ export class User extends BaseEntity {
   @UpdateDateColumn()
   updated_at: Date;
 
-  @Column()
+  @Column({
+    length: 45
+  })
   full_name: string;
 
   @Column()
