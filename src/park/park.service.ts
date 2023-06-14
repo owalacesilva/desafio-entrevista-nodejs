@@ -1,6 +1,7 @@
-import { HttpException, HttpStatus, Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Park } from './park.entity';
+import { User } from 'src/user/user.entity';
 
 @Injectable()
 export class ParkService {
@@ -10,48 +11,30 @@ export class ParkService {
     private parkRepository: Repository<Park>
   ) {}
 
-  async findAll(): Promise<Park[]> {
-    return this.parkRepository.find();
-  }
-
-  async findById(id: number): Promise<Park> {
-    const park = await this.parkRepository.findOne({
-      where: {
-        id: id
+  async getAll(user: User, company_id: number): Promise<Park[]> {
+    return this.parkRepository.find({
+      order: {
+        created_at: 'DESC'
       }
     });
+  }
+
+  async getById(user: User, id: number): Promise<Park> {
+    const park = await this.parkRepository.findOneBy({ id });
 
     if (!park) {
-      throw new HttpException('Park cannot found', HttpStatus.NOT_FOUND);
+      throw new NotFoundException('Park cannot found');
     }
 
     return park;
   }
 
-  async create(postData: Object) {
+  async optIn(user: User, postData: Object) {
     return await this.parkRepository.save(postData);
   }
 
-  async update(id: number, postData: Object) {
-    await this.parkRepository.update(id, postData);
-    const park = await this.parkRepository.findOne({
-      where: {
-        id: id
-      }
-    });
-
-    if (!park) {
-      throw new HttpException('Park cannot found', HttpStatus.NOT_FOUND);
-    }
-
-    return park;
-  }
-
-  async delete(id: number) {
-    const park = await this.parkRepository.delete(id);
-
-    if (!park.affected) {
-      throw new HttpException('Park cannot found', HttpStatus.NOT_FOUND);
-    }
+  async optOut(user: User, id: number) {
+    await this.parkRepository.update(id, { updated_at: Date() });
+    return await this.getById(user, id);
   }
 }
