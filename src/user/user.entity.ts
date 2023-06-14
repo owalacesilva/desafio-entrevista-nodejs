@@ -1,16 +1,20 @@
+import { IsEmail } from 'class-validator';
 import { Company } from 'src/company/company.entity';
 import {
   BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
-  Index,
   OneToMany,
   PrimaryGeneratedColumn,
+  Unique,
   UpdateDateColumn,
 } from 'typeorm';
+
+export const UNIQUE_USER_EMAIL_CONSTRAINT = 'UNIQUE_USER_EMAIL_CONSTRAINT';
   
 @Entity()
+@Unique(UNIQUE_USER_EMAIL_CONSTRAINT, ['email'])
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -27,7 +31,7 @@ export class User extends BaseEntity {
   full_name: string;
 
   @Column()
-  @Index({ unique: true })
+  @IsEmail()
   email: string;
 
   @Column()

@@ -1,3 +1,4 @@
+import { Max, Min } from 'class-validator';
 import { Park } from 'src/park/park.entity';
 import { User } from 'src/user/user.entity';
 import {
@@ -5,15 +6,18 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  Index,
   JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  Unique,
   UpdateDateColumn,
 } from 'typeorm';
+
+export const UNIQUE_COMPANY_CNPJ_CONSTRAINT = 'UNIQUE_COMPANY_CNPJ_CONSTRAINT';
   
 @Entity()
+@Unique(UNIQUE_COMPANY_CNPJ_CONSTRAINT, ['company_identity'])
 export class Company extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -40,7 +44,6 @@ export class Company extends BaseEntity {
   name: string;
 
   @Column()
-  @Index({ unique: true })
   company_identity: string;
 
   @Column()
@@ -52,11 +55,15 @@ export class Company extends BaseEntity {
   @Column({
     default: () => '0'
   })
+  @Min(1)
+  @Max(10)
   amount_motorcycles: number;
 
   @Column({
     default: () => '0'
   })
+  @Min(1)
+  @Max(10)
   amount_cars: number;
 
   @OneToMany(() => Park, (park) => park.company)

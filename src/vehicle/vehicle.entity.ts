@@ -4,13 +4,16 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  Index,
   OneToMany,
   PrimaryGeneratedColumn,
+  Unique,
   UpdateDateColumn,
 } from 'typeorm';
+
+export const UNIQUE_VEHICLE_REGISTRY_CONSTRAINT = 'UNIQUE_VEHICLE_REGISTRY_CONSTRAINT';
   
 @Entity()
+@Unique(UNIQUE_VEHICLE_REGISTRY_CONSTRAINT, ['registry'])
 export class Vehicle extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -33,7 +36,6 @@ export class Vehicle extends BaseEntity {
   color: string;
 
   @Column()
-  @Index({ unique: true })
   registry: string;
 
   @Column()
