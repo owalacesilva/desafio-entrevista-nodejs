@@ -6,10 +6,12 @@ import { CompanyModule } from './company/company.module';
 import { VehicleModule } from './vehicle/vehicle.module';
 import { UserModule } from './user/user.module';
 import { ParkModule } from './park/park.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
     DatabaseModule,
+    AuthModule,
     UserModule,
     CompanyModule,
     VehicleModule,
