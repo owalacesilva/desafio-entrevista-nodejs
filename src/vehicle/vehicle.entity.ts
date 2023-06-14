@@ -1,8 +1,11 @@
+import { Park } from 'src/park/park.entity';
 import {
   BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
+  Index,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -30,8 +33,12 @@ export class Vehicle extends BaseEntity {
   color: string;
 
   @Column()
+  @Index({ unique: true })
   registry: string;
 
   @Column()
   kind_of: string;
+
+  @OneToMany(() => Park, (park) => park.vehicle)
+  parks: Park[];
 }

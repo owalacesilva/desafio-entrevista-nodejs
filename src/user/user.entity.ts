@@ -4,8 +4,8 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
-  OneToOne,
+  Index,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -27,12 +27,12 @@ export class User extends BaseEntity {
   full_name: string;
 
   @Column()
+  @Index({ unique: true })
   email: string;
 
   @Column()
   password: string;
 
-  @OneToOne(() => Company)
-  @JoinColumn()
-  company: Company;
+  @OneToMany(() => Company, (company) => company.user)
+  companies: Company[];
 }

@@ -5,6 +5,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -23,9 +24,23 @@ export class Park extends BaseEntity {
   @UpdateDateColumn()
   updated_at: Date;
 
-  @ManyToOne(() => Company)
+  @ManyToOne(() => Company, (company) => company.parks, {
+    nullable: false,
+    cascade: ["insert", "update"],
+  })
+  @JoinColumn({
+    name: 'company_id',
+    referencedColumnName: 'id'
+  })  
   public company: Company;
 
-  @ManyToOne(() => Vehicle)
+  @ManyToOne(() => Vehicle, (vehicle) => vehicle.parks, {
+    nullable: false,
+    cascade: ["insert", "update"],
+  })
+  @JoinColumn({
+    name: 'vehicle_id',
+    referencedColumnName: 'id'
+  })
   public vehicle: Vehicle;
 }

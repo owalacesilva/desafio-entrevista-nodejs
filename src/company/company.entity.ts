@@ -1,8 +1,14 @@
+import { Park } from 'src/park/park.entity';
+import { User } from 'src/user/user.entity';
 import {
   BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -14,16 +20,27 @@ export class Company extends BaseEntity {
 
   @Column()
   @CreateDateColumn()
-  createdAt: Date; // created_at
+  created_at: Date; // created_at
 
   @Column()
   @UpdateDateColumn()
-  updatedAt: Date; // updated_at
+  updated_at: Date; // updated_at
+
+  @ManyToOne(() => User, (user) => user.companies, {
+    nullable: false,
+    cascade: ["insert", "update"],
+  })
+  @JoinColumn({
+    name: 'user_id',
+    referencedColumnName: 'id'
+  })
+  user: User;
 
   @Column()
   name: string;
 
   @Column()
+  @Index({ unique: true })
   company_identity: string;
 
   @Column()
@@ -41,4 +58,7 @@ export class Company extends BaseEntity {
     default: () => '0'
   })
   amount_cars: number;
+
+  @OneToMany(() => Park, (park) => park.company)
+  parks: Park[];
 }
